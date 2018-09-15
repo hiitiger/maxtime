@@ -1,0 +1,53 @@
+import { app as ElectornApp, ipcMain } from "electron";
+import * as path from "path";
+
+import * as log4js from "log4js";
+
+const logFile = path.join(
+    global.CONFIG.appDataDir,
+    "log",
+    `${global.CONFIG.appName}.log`.toLowerCase(),
+);
+
+const stdout = global.DEBUG;
+
+log4js.configure({
+    appenders: {
+        file: {
+            type: "file",
+            filename: logFile,
+        },
+        out: {
+            type: "stdout",
+        },
+    },
+    categories: {
+        default: {
+            appenders: stdout ? ["file", "out"] : ["file"],
+            level: "info",
+        },
+    },
+});
+
+export function logger(name: string) {
+    return log4js.getLogger(name);
+}
+
+export function shutdownLogger() {
+    log4js.shutdown((err) => {
+        return err && console.log(err) && null;
+    });
+}
+
+ipcMain.on(
+    "__LOGGER__",
+    (
+        event: string,
+        data: { name: string; level: string; message: string; args: any[] },
+    ) => {
+        const { name, level, message, args } = data;
+        const rendererName = `renderer-${name}`;
+        const loggerObj = logger(rendererName) as any;
+        loggerObj[level](message, ...args);
+    },
+);
