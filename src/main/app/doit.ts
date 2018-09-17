@@ -22,8 +22,8 @@ ipcMain.on("doit", () => {
             show: true,
             frame: false,
             skipTaskbar: true,
-            x: display.bounds.width - 1000,
-            y: display.bounds.height - 600,
+            x: display.bounds.width + display.bounds.x - 1000,
+            y: display.bounds.height + display.bounds.y - 600,
             alwaysOnTop: true,
         },
     );
