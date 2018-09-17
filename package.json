@@ -4,9 +4,11 @@
   "author": {},
   "main": "./dist/main/main.js",
   "dependencies": {
-    "log4js": "^3.0.2",
     "fs-extra": "^7.0.0",
-    "process-utils": "file: ./addon/process-utils"
+    "log4js": "^3.0.2",
+    "process-utils": "file:addon/process-utils",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1"
   },
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
@@ -14,11 +16,12 @@
     "build:renderer": "webpack --config webpack.config.renderer.js",
     "start": "electron . --enable-logging",
     "package:dir": "npm run build && electron-builder --dir",
-    "postinstall": "install-app-deps"
-
+    "build:native": "install-app-deps"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.7",
     "awesome-typescript-loader": "^5.2.0",
     "cross-env": "^5.2.0",
     "devtron": "^1.4.0",
@@ -43,8 +46,10 @@
       "icon": "app.ico"
     },
     "electronDist": "./node_modules/electron/dist",
-    "npmRebuild": false,
     "asar": true,
+    "asarUnpack": [
+      "./node_modules/process-utils"
+    ],
     "extraResources": [
       "assets"
     ],
