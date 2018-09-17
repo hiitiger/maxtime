@@ -14,16 +14,16 @@ enum AppWindows {
 const PRELOAD_JS = path.join(__dirname, "./webpreload.js");
 
 class Application {
+    private static singleton: Application;
+
     private windows: Map<string, Electron.BrowserWindow>;
     private appDir: string;
     private tray: Electron.Tray | null;
     private markQuit = false;
     private isWebReady = false;
 
-    constructor() {
-        this.windows = new Map();
-        this.appDir = "";
-        this.tray = null;
+    static get app() {
+        return this.singleton;
     }
 
     get appWindows() {
@@ -99,6 +99,12 @@ class Application {
 
             window.loadURL(global.CONFIG.entryUrl);
         }
+    }
+    constructor() {
+        this.windows = new Map();
+        this.appDir = "";
+        this.tray = null;
+        Application.singleton = this;
     }
 
     public init(appDir: string) {
@@ -244,8 +250,28 @@ class Application {
         shell.openExternal(url);
     }
 
+    public openWindow(
+        name: string,
+        url: string,
+        options: Electron.BrowserWindowConstructorOptions,
+    ) {
+        let window = this.getWindow(name);
+        if (!window) {
+            window = this.createWindow(
+                name,
+                options as Electron.BrowserViewConstructorOptions,
+            );
+        }
+        if (window.webContents.getURL() !== url) {
+            window.loadURL(url);
+        }
+        if (options.show) {
+            window.show();
+        }
+    }
+
     private createWindow(
-        name: AppWindows,
+        name: string,
         options: Electron.BrowserWindowConstructorOptions,
     ) {
         const { webPreferences } = options;

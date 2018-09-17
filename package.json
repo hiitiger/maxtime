@@ -50,15 +50,19 @@
     "asarUnpack": [
       "./node_modules/process-utils"
     ],
-    "extraResources": [
-      "assets"
-    ],
     "files": [{
         "from": "dist",
         "to": "dist",
         "filter": [
           "**/*",
           "!**/*.map"
+        ]
+      },
+      {
+        "from": "assets",
+        "to": "assets",
+        "filter": [
+          "**/*"
         ]
       },
       {

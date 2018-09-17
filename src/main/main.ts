@@ -9,14 +9,21 @@ import { Application } from "./electron/app-entry";
 
 import * as fse from "fs-extra";
 
+import "./app/doit";
+
 logger("main").info("start...");
 logger("main").info("CONFIG", { DEBUG: global.DEBUG, CONFIG: global.CONFIG });
 
 function installDevtron() {
     console.log("Installing Devtron");
-    const devtron = require("devtron");
-    devtron.uninstall();
-    devtron.install();
+    try {
+        const devtron = require("devtron");
+        devtron.uninstall();
+        devtron.install();
+    } catch (err) {
+        logger("main").error("install devtron fail", err);
+    }
+
     console.log("Installed Devtron");
 }
 
