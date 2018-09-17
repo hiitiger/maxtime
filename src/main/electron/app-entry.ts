@@ -10,7 +10,6 @@ import { settings } from "./native/settings";
 
 enum AppWindows {
     main = "main",
-    loading = "loading"
 }
 const PRELOAD_JS = path.join(__dirname, "./webpreload.js");
 
@@ -65,11 +64,11 @@ class Application {
                     }
 
                     logger("client").error(
-                        `main window load fail ${errorCode} ${errorDescription}`
+                        `main window load fail ${errorCode} ${errorDescription}`,
                     );
 
                     window.reload();
-                }
+                },
             );
 
             window.webContents.on("crashed", (event, killed) => {
@@ -89,7 +88,7 @@ class Application {
                 logger("client").info("main window unresponsive");
             });
 
-            window.on("close", event => {
+            window.on("close", (event) => {
                 if (this.markQuit) {
                     return;
                 }
@@ -122,8 +121,8 @@ class Application {
             backgroundColor: "#282b30",
             webPreferences: {
                 nodeIntegration: true,
-                preload: PRELOAD_JS
-            }
+                preload: PRELOAD_JS,
+            },
         };
         const mainWindow = this.createWindow(AppWindows.main, options);
         this.mainWindow = mainWindow;
@@ -184,20 +183,20 @@ class Application {
                     label: "OpenMainWindow",
                     click: () => {
                         this.showAndFocusWindow(AppWindows.main);
-                    }
+                    },
                 },
                 {
                     label: "About",
                     click: () => {
                         this.showAbout();
-                    }
+                    },
                 },
                 {
                     label: "Quit",
                     click: () => {
                         this.quit();
-                    }
-                }
+                    },
+                },
             ]);
             this.tray.setToolTip("WelCome");
             this.tray.setContextMenu(contextMenu);
@@ -247,15 +246,15 @@ class Application {
 
     private createWindow(
         name: AppWindows,
-        options: Electron.BrowserWindowConstructorOptions
+        options: Electron.BrowserWindowConstructorOptions,
     ) {
         const { webPreferences } = options;
         options = {
             ...options,
             webPreferences: {
                 nodeIntegration: false,
-                ...webPreferences
-            }
+                ...webPreferences,
+            },
         };
 
         const window = new BrowserWindow(options);
@@ -269,7 +268,7 @@ class Application {
                 if (input.key === "F12" && input.type === "keyDown") {
                     window.webContents.openDevTools();
                 }
-            }
+            },
         );
         window.setMenu(null);
         return window;

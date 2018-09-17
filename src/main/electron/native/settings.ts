@@ -16,6 +16,7 @@ class PersistenceSettings {
                 console.log(err);
                 this.config = {};
                 this.lastValue = "";
+                this.save();
             }
         } else {
             this.config = {};

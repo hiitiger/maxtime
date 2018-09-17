@@ -2,6 +2,8 @@
  * Build config for electron 'Renderer Process' file
  */
 
+const path = require("path")
+
 module.exports = {
     devtool: 'cheap-module-source-map',
 
@@ -24,6 +26,9 @@ module.exports = {
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
             {
                 test: /\.tsx?$/,
+                include: [
+                    path.resolve(__dirname, 'src/renderer')
+                ],
                 loader: "awesome-typescript-loader"
             },
 

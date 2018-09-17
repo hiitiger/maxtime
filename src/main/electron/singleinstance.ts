@@ -4,19 +4,9 @@ function start(
     successCallback: () => void,
     newProcessCallback: (argv: string[]) => void,
 ) {
-    const gotTheLock = ElectronApp.requestSingleInstanceLock();
-
-    if (!gotTheLock) {
-        ElectronApp.quit();
-        return;
-    }
-
-    ElectronApp.on(
-        "second-instance",
-        (event, argv: string[], workingDirectory) => {
-            newProcessCallback(argv);
-        },
-    );
+    const shouldQuit = ElectronApp.makeSingleInstance((argv: string[]) => {
+        newProcessCallback(argv);
+    });
 
     successCallback();
 }

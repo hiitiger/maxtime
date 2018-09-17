@@ -1,0 +1,16 @@
+{
+  "name": "process-utils",
+  "version": "0.1.0",
+  "author": {},
+  "main": "./js/index.js",
+  "types": "./js/index.d.ts",
+  "dependencies": {
+    "node-addon-api": "^1.4.0",
+    "node-gyp": "^3.7.0"
+  },
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "build": "node-gyp build",
+    "compile": "node-gyp rebuild"
+  }
+}
