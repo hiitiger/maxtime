@@ -293,3 +293,126 @@ VOID CALLBACK SystemForegroundAppNotify::_WinEventProc(HWINEVENTHOOK hWinEventHo
         });
     }
 }
+
+/////////////////////////////////////
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
+
+struct ACCENTPOLICY
+{
+    int nAccentState;
+    int nFlags;
+    int nColor;
+    int nAnimationId;
+};
+struct WINCOMPATTRDATA
+{
+    int nAttribute;
+    PVOID pData;
+    ULONG ulDataSize;
+};
+
+enum AccentTypes
+{
+    ACCENT_DISABLE = 0,
+    ACCENT_ENABLE_GRADIENT = 1,
+    ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
+    ACCENT_ENABLE_BLURBEHIND = 3
+};
+
+
+inline BOOL GetNtVersionNumbers(DWORD&dwMajorVer, DWORD& dwMinorVer, DWORD& dwBuildNumber)
+{
+    BOOL bRet = FALSE;
+    HMODULE hModNtdll = NULL;
+    if (hModNtdll = ::LoadLibraryW(L"ntdll.dll"))
+    {
+        typedef void (WINAPI *pfRTLGETNTVERSIONNUMBERS)(DWORD*, DWORD*, DWORD*);
+        pfRTLGETNTVERSIONNUMBERS pfRtlGetNtVersionNumbers;
+        pfRtlGetNtVersionNumbers = (pfRTLGETNTVERSIONNUMBERS)::GetProcAddress(hModNtdll, "RtlGetNtVersionNumbers");
+        if (pfRtlGetNtVersionNumbers)
+        {
+            pfRtlGetNtVersionNumbers(&dwMajorVer, &dwMinorVer, &dwBuildNumber);
+            dwBuildNumber &= 0x0ffff;
+            bRet = TRUE;
+        }
+
+        ::FreeLibrary(hModNtdll);
+        hModNtdll = NULL;
+    }
+
+    return bRet;
+}
+
+bool IsWin10()
+{
+    DWORD dwMajor;
+    DWORD dwMinor;
+    DWORD dwBuild;
+    GetNtVersionNumbers(dwMajor, dwMinor, dwBuild);
+    return dwMajor == 10;
+}
+
+
+inline bool SetBlurBehind(HWND hwnd, bool state)
+{
+    bool result = false;
+
+    if (IsWin10())
+    {
+        const HINSTANCE hModule = LoadLibrary(TEXT("user32.dll"));
+        if (hModule)
+        {
+            typedef BOOL(WINAPI * pSetWindowCompositionAttribute)(HWND,
+                                                                  WINCOMPATTRDATA *);
+            const pSetWindowCompositionAttribute
+                SetWindowCompositionAttribute =
+                    (pSetWindowCompositionAttribute)GetProcAddress(
+                        hModule,
+                        "SetWindowCompositionAttribute");
+
+            if (SetWindowCompositionAttribute)
+            {
+                ACCENTPOLICY policy =
+                    {state ? ACCENT_ENABLE_BLURBEHIND
+                           : ACCENT_DISABLE,
+                     0, 0, 0};
+                WINCOMPATTRDATA data = {19, &policy, sizeof(ACCENTPOLICY)};
+                result = SetWindowCompositionAttribute(hwnd, &data);
+            }
+            FreeLibrary(hModule);
+        }
+    }
+    else
+    {
+        HRESULT hr = S_OK;
+
+        // Create and populate the Blur Behind structure
+        DWM_BLURBEHIND bb = {0};
+
+        // Enable Blur Behind and apply to the entire client area
+        bb.dwFlags = DWM_BB_ENABLE;
+        bb.fEnable = true;
+        bb.hRgnBlur = NULL;
+
+        // Apply Blur Behind
+        hr = DwmEnableBlurBehindWindow(hwnd, &bb);
+        if (SUCCEEDED(hr))
+        {
+            result = true;
+        }
+    }
+    return result;
+}
+
+inline Napi::Value enableVibrancy(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+
+    std::uint32_t hwnd = info[0].ToNumber();
+    bool enable = info[1].ToBoolean();
+
+    SetBlurBehind((HWND)hwnd, enable);
+
+    return env.Undefined();
+}

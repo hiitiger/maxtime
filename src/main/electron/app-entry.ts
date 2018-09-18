@@ -7,6 +7,7 @@ import { logger } from "../utils/logger";
 import { CLIENT_EVENT, WEBAPP_EVENT } from "./events";
 import * as sdk from "./native/sdk";
 import { settings } from "./native/settings";
+import * as processUtils from "process-utils";
 
 enum AppWindows {
     main = "main",
@@ -124,13 +125,20 @@ class Application {
             show: false,
             frame: false,
             center: true,
-            backgroundColor: "#282b30",
+            backgroundColor: "#80ffffff",
+            transparent: true,
             webPreferences: {
                 nodeIntegration: true,
                 preload: PRELOAD_JS,
             },
         };
         const mainWindow = this.createWindow(AppWindows.main, options);
+        if (process.platform === "win32") {
+            processUtils.enableVibrancy(
+                mainWindow.getNativeWindowHandle().readUInt32LE(0),
+                true,
+            );
+        }
         this.mainWindow = mainWindow;
         return mainWindow;
     }

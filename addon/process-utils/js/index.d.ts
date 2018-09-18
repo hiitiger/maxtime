@@ -20,4 +20,5 @@ declare module "process-utils" {
     ): void;
 
     export function stopSystemForegroundAppWatch(): void;
+    export function enableVibrancy(winhandle: number, enable: boolean): void;
 }
