@@ -10,7 +10,8 @@
         "no-console": false,
         "unified-signatures": false,
         "interface-name": false,
-        "ordered-imports": false
+        "ordered-imports": false,
+        "no-reference": false
     },
     "rulesDirectory": []
 }

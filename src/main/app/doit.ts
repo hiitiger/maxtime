@@ -1,9 +1,7 @@
-import { ipcMain } from "electron";
+import { ipcMain, screen } from "electron";
 import { fileUrl } from "../utils/utils";
-import * as path from "path";
 import { Application } from "../electron/app-entry";
-import { screen } from "electron";
-import { logger } from "../utils/logger";
+import * as path from "path";
 
 ipcMain.on("doit", () => {
     Application.app.closeWindow("doit");
@@ -12,7 +10,7 @@ ipcMain.on("doit", () => {
         screen.getCursorScreenPoint(),
     );
 
-    Application.app.openWindow(
+    const window = Application.app.openWindow(
         "doit",
         fileUrl(path.join(global.CONFIG.distDir, "doit/index.html")),
         {
@@ -27,4 +25,6 @@ ipcMain.on("doit", () => {
             alwaysOnTop: true,
         },
     );
+
+    window.setIgnoreMouseEvents(true);
 });

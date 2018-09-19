@@ -4,11 +4,13 @@
   "author": {},
   "main": "./dist/main/main.js",
   "dependencies": {
+    "@material-ui/core": "^3.1.0",
     "fs-extra": "^7.0.0",
     "log4js": "^3.0.2",
     "process-utils": "file:addon/process-utils",
     "react": "^16.5.1",
-    "react-dom": "^16.5.1"
+    "react-dom": "^16.5.1",
+    "typeface-roboto": "^0.0.54"
   },
   "scripts": {
     "build": "npm run build:main && npm run build:renderer",
@@ -24,14 +26,17 @@
     "@types/react-dom": "^16.0.7",
     "awesome-typescript-loader": "^5.2.0",
     "cross-env": "^5.2.0",
+    "css-loader": "^1.0.0",
     "devtron": "^1.4.0",
     "electron": "2.0.7",
     "electron-builder": "^20.28.2",
     "electron-rebuild": "^1.8.1",
     "node-gyp": "^3.7.0",
     "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.0",
     "tslint": "^5.10.0",
     "typescript": "^3.0.3",
+    "url-loader": "^1.1.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0"
   },
@@ -50,7 +55,8 @@
     "asarUnpack": [
       "./node_modules/process-utils"
     ],
-    "files": [{
+    "files": [
+      {
         "from": "dist",
         "to": "dist",
         "filter": [

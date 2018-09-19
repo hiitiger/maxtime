@@ -118,15 +118,15 @@ class Application {
 
     public createMainWindow() {
         const options = {
-            minWidth: 1280,
-            minHeight: 768,
+            minWidth: 600,
+            minHeight: 420,
             width: 1280,
             height: 768,
             show: false,
             frame: false,
             center: true,
             backgroundColor: "#80ffffff",
-            transparent: true,
+            transparent: false,
             webPreferences: {
                 nodeIntegration: true,
                 preload: PRELOAD_JS,
@@ -276,6 +276,7 @@ class Application {
         if (options.show) {
             window.show();
         }
+        return window;
     }
 
     private createWindow(
