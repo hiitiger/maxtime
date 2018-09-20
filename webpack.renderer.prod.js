@@ -3,6 +3,7 @@
  */
 
 const path = require("path")
+const webpack = require('webpack');
 
 module.exports = {
     devtool: 'cheap-module-source-map',
@@ -13,12 +14,12 @@ module.exports = {
 
     output: {
         filename: "renderer.js",
-        path: __dirname + "/dist/renderer"
+        path: __dirname + "/dist/renderer",
     },
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json"],
     },
 
     module: {
@@ -29,7 +30,12 @@ module.exports = {
                 include: [
                     path.resolve(__dirname, 'src/renderer')
                 ],
-                loader: "awesome-typescript-loader"
+                use: [{
+                    loader: 'awesome-typescript-loader',
+                    options: {
+                        configFileName: "tsconfig.renderer.json"
+                    }
+                }]
             },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -41,7 +47,7 @@ module.exports = {
 
             {
                 test: /\.css$/,
-                loader: ["style-loader", "css-loader"]
+                loader: ["style-loader", "css-loader?modules=true"]
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -54,11 +60,13 @@ module.exports = {
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
-    externals: {
-        "react": "React",
-        "react-dom": "ReactDOM"
-    },
+    // externals: {
+    //     "react": "React",
+    //     "react-dom": "ReactDOM"
+    // },
 
     // https://github.com/chentsulin/webpack-target-electron-renderer#how-this-module-works
-    target: 'electron-renderer'
+    target: 'electron-renderer',
+
+    mode: 'production'
 };

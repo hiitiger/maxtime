@@ -3,9 +3,8 @@ import * as ReactDOM from "react-dom";
 import "typeface-roboto";
 
 import Button from "@material-ui/core/Button";
-import AppBar from "@material-ui/core/AppBar";
 
-import { AppProcessInfo } from "./components/AppProcessInfo";
+import TitleBar from "./pages/titlebar";
 
 import { ipcRenderer, remote } from "electron";
 import { WEBAPP_EVENT } from "../main/electron/events";
@@ -18,8 +17,8 @@ const styles = {
     },
     title: {
         "width": "100%",
-        "height": "80px",
-        "background-color": "rgba(34,34,34, 0.8)",
+        "height": "40px",
+        "background-color": "rgba(0, 0, 0, 0.75)",
         "-webkit-app-region": "drag",
         "position": "unset",
         "display": "flex",
@@ -27,7 +26,7 @@ const styles = {
         "justify-content": "flex-end",
     } as React.CSSProperties,
 
-    titleButtons: {
+    buttonContainer: {
         "display": "flex",
         "flex-direction": "row",
         "-webkit-app-region": "no-drag",
@@ -41,8 +40,8 @@ const styles = {
 
     button: {
         background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-        borderRadius: 2,
-        height: 48,
+        borderRadius: 12,
+        height: 34,
         border: 0,
         color: "white",
         boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
@@ -53,8 +52,9 @@ class App extends React.Component {
     public render() {
         return (
             <div style={styles.window}>
-                <AppBar style={styles.title}>
-                    <div style={styles.titleButtons}>
+                <TitleBar title="MaxTime" icon="⏰" />
+                <div style={styles.title}>
+                    <div style={styles.buttonContainer}>
                         <Button
                             style={styles.button}
                             variant="contained"
@@ -77,7 +77,7 @@ class App extends React.Component {
                             Quit
                         </Button>
                     </div>
-                </AppBar>
+                </div>
                 <div style={styles.content} />
             </div>
         );

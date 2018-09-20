@@ -10,7 +10,7 @@
             background-color: rgba(61, 70, 73, 0.3);
             margin: 0
         }
-        
+
         .titleBar {
             width: 100%;
             height: 100px;
@@ -23,9 +23,30 @@
 
 <body>
     <div id="root"></div>
-    <script src="../../node_modules/react/umd/react.development.js"></script>
-    <script src="../../node_modules/react-dom/umd/react-dom.development.js"></script>
-    <script src="../renderer/renderer.js"></script>
+    <!-- <script src="../renderer/renderer.js"></script> -->
+
+    <script>
+        {
+            const process = global.process || {
+                type: 'renderer',
+                env: {
+                    HOT: window.location.search.includes('hot'),
+                    port: 3003
+                }
+            };
+            const port = process.env.PORT || 3003;
+
+            if (process.env.HOT) {
+                const script = document.createElement('script');
+                script.src = 'http://localhost:' + port + '/dist/renderer/renderer.js';
+                document.body.appendChild(script);
+            } else {
+                const script = document.createElement('script');
+                script.src = '../renderer/renderer.js';
+                document.body.appendChild(script);
+            }
+        }
+    </script>
 </body>
 
 </html>

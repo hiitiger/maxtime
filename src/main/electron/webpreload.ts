@@ -1,17 +1,17 @@
 import logger from "./preload/logger";
 import sdk from "./preload/sdk";
 import settings from "./preload/settings";
+import window from "./preload/window";
 
 import { remote } from "electron";
 
-const maxtime = { sdk, settings, logger };
+const maxtime = { sdk, settings, logger, window };
 
 process.once("loaded", () => {
-    const window: any = global;
-    window.maxtime = maxtime;
-    window.nodeRequire = require;
-    window.nodeRequireRemote = remote.require;
+    (global as any).maxtime = maxtime;
+    (global as any).nodeRequire = require;
+    (global as any).nodeRequireRemote = remote.require;
     if (remote.getGlobal("DEBUG")) {
-        window.__devtron = { require, process };
+        (global as any).__devtron = { require, process };
     }
 });

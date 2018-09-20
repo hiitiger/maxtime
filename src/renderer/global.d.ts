@@ -1,3 +1,5 @@
+declare module "*.css";
+
 declare class Logger {
     public debug(message: any, ...args: any[]): void;
     public info(message: any, ...args: any[]): void;
@@ -21,6 +23,13 @@ declare interface Window {
         };
         logger: {
             getLogger: (name: string) => Logger;
+        };
+        window: {
+            minimize: () => void;
+            restore: () => void;
+            maximize: () => void;
+            restoreOrMaximize: () => void;
+            close: () => void;
         };
     };
 }
