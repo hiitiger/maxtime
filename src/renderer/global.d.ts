@@ -31,5 +31,7 @@ declare interface Window {
             restoreOrMaximize: () => void;
             close: () => void;
         };
+        require: NodeRequire;
+        requireRemote: (module: string) => any;
     };
 }

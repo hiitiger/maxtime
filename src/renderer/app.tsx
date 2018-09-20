@@ -2,12 +2,19 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "typeface-roboto";
 
+import { ipcRenderer, remote } from "electron";
+import { WEBAPP_EVENT } from "../main/electron/events";
+
 import Button from "@material-ui/core/Button";
 
 import TitleBar from "./pages/titlebar";
+import AppProcessInfo from "./pages/AppProcessInfo";
 
-import { ipcRenderer, remote } from "electron";
-import { WEBAPP_EVENT } from "../main/electron/events";
+import * as IProcessUtils from "process-utils";
+
+const procoessUtils: typeof IProcessUtils = window.maxtime.requireRemote(
+    "process-utils",
+);
 
 const styles = {
     window: {
@@ -18,24 +25,24 @@ const styles = {
     title: {
         "width": "100%",
         "height": "40px",
-        "background-color": "rgba(0, 0, 0, 0.75)",
+        "backgroundColor": "rgba(0, 0, 0, 0.75)",
         "-webkit-app-region": "drag",
         "position": "unset",
         "display": "flex",
-        "flex-direction": "row",
-        "justify-content": "flex-end",
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
     } as React.CSSProperties,
 
     buttonContainer: {
         "display": "flex",
-        "flex-direction": "row",
+        "flexDirection": "row",
         "-webkit-app-region": "no-drag",
-    },
+    } as React.CSSProperties,
 
     content: {
-        "width": "100%",
-        "flex": "1",
-        "background-color": "rgb(255, 255, 255, 0.5)",
+        width: "100%",
+        flex: "1",
+        backgroundColor: "rgb(255, 255, 255, 0.5)",
     },
 
     button: {
@@ -48,7 +55,35 @@ const styles = {
     },
 };
 
-class App extends React.Component {
+interface IAppState {
+    activeApp: {
+        title?: string;
+        product?: string;
+        path?: string;
+    };
+}
+
+class App extends React.Component<{}, Partial<IAppState>> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            activeApp: {},
+        };
+    }
+
+    public componentDidMount() {
+        setInterval(() => {
+            const activeApp = procoessUtils.getActiveAppProcessInfo();
+            this.setState({
+                activeApp: {
+                    title: activeApp.title,
+                    product: activeApp.productName,
+                    path: activeApp.filePath,
+                },
+            });
+        });
+    }
+
     public render() {
         return (
             <div style={styles.window}>
@@ -78,7 +113,9 @@ class App extends React.Component {
                         </Button>
                     </div>
                 </div>
-                <div style={styles.content} />
+                <div style={styles.content}>
+                    <AppProcessInfo {...this.state.activeApp} />
+                </div>
             </div>
         );
     }

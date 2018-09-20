@@ -6,7 +6,10 @@ export interface IProps {
     path: string;
 }
 
-export class AppProcessInfo extends React.Component<IProps, {}> {
+export default class AppProcessInfo extends React.Component<
+    Partial<IProps>,
+    {}
+> {
     public render() {
         return (
             <div>

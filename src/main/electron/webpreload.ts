@@ -5,12 +5,17 @@ import window from "./preload/window";
 
 import { remote } from "electron";
 
-const maxtime = { sdk, settings, logger, window };
+const maxtime = {
+    sdk,
+    settings,
+    logger,
+    window,
+    require,
+    requireRemote: remote.require,
+};
 
 process.once("loaded", () => {
     (global as any).maxtime = maxtime;
-    (global as any).nodeRequire = require;
-    (global as any).nodeRequireRemote = remote.require;
     if (remote.getGlobal("DEBUG")) {
         (global as any).__devtron = { require, process };
     }
