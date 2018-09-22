@@ -81,7 +81,7 @@ class App extends React.Component<{}, Partial<IAppState>> {
                     path: activeApp.filePath,
                 },
             });
-        });
+        }, 1000);
     }
 
     public render() {

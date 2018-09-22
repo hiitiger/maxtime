@@ -10,7 +10,8 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "experimentalDecorators": true,
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "declaration": true
     },
     "include": [
         "src/main/**/*"

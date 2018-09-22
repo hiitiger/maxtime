@@ -10,6 +10,7 @@
     "process-utils": "file:addon/process-utils",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
+    "sqlite3": "^4.0.2",
     "typeface-roboto": "^0.0.54"
   },
   "scripts": {
